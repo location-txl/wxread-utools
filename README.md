@@ -1,5 +1,14 @@
-# Vue 3 + Vite
+# 微信阅读补时长插件
+参考自[wxread](https://github.com/findmover/wxread)
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+初学js 欢迎PR
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## 编译
+```shell
+npm install && cd utools && npm install
+npm run dev
+```
+
+
+[使用文档](https://www.yuque.com/location/hmoqs0/pz510d0d1ak19hsd)
+

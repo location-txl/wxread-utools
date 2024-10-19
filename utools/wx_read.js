@@ -46,8 +46,7 @@ const read_url = "https://weread.qq.com/web/book/read";
 const get_sKey_url = "https://weread.qq.com/web/login/renewal"
 
 const key = "3c5c8717f3daf09iop3423zafeqoi";
-// const debug = utools.isDev()
-const debug = true
+const debug = utools.isDev()
 
 /**
  * config 格式
@@ -60,7 +59,6 @@ const debug = true
  *     }
  * }
  * @param config
- * @returns {Promise<*|boolean>}
  */
 async function read(config) {
     const data = config.body
@@ -94,14 +92,14 @@ async function read(config) {
         }
         if ('succ' in resData) {
             console.log("数据格式正确，阅读进度有效！");
-            return true
+            return "succ"
         } else if (resData.errCode === -2012) {
             console.log("数据格式问题,尝试初始化cookie值");
-            return false
+            return "re_key"
         }
     } catch (error) {
         console.error("请求出错:", error);
-        return error
+        return error.message
     } finally {
         delete headers.cookie
     }
@@ -115,22 +113,51 @@ async function get_sKey(config) {
     const headers = config.header
     headers.cookie = generateCookie(config.cookie)
 
-    const response = await axios.post(get_sKey_url, JSON.stringify(data), {
-        headers: headers, withCredentials: true,
+    const response = await axios.post(get_sKey_url, data, {
+        headers: headers,
         adapter: "http",//@落雨
     });
-    console.log("res",response.headers)
-    console.log("res",response.data)
-    const new_cookie = response.headers['Set-Cookie']
-    if(!new_cookie || response.data.errCode === -12013){
+    if(debug){
+        console.log("request data",JSON.stringify(data))
+        console.log("request headers",headers)
+        console.log("response data",response.data)
+        console.log("response headers",response.headers)
+    }
+
+    const new_cookie = response.headers['set-cookie']
+    if(debug){
+        console.log("new_cookie", new_cookie)
+    }
+    if(!new_cookie){
         if(debug){
             console.log("重新登录")
         }
+        return {
+            errorMsg: "请重新在网页登录 获取read接口信息",
+        }
     }
-    console.log('new_cookie', new_cookie)
-    const cookie_obj = parseCookies(new_cookie)
-    console.log('cookie_obj', cookie_obj)
-    console.log('cookie_obj.wr_skey', cookie_obj.wr_skey)
+    const new_key = getSKeyForCookie(new_cookie)
+    if(debug){
+        console.log("new_key", new_key)
+    }
+    if(!new_key){
+        return {
+            errorMsg: "未知错误 获取密钥失败 请重新在网页登录 获取read接口信息",
+        }
+    }
+    return {
+        sKey: new_key
+    }
+}
+
+
+function getSKeyForCookie(cookies){
+    for (let i = 0; i < cookies.length; i++) {
+        if(cookies[i].startsWith("wr_skey")){
+            return cookies[i].split(';')[0].split('=')[1]
+        }
+    }
+    return undefined
 }
 
 
@@ -138,14 +165,7 @@ function generateCookie(cookies) {
     return Object.entries(cookies).map(([key, value]) => `${key}=${value}`).join('; ');
 }
 
-function parseCookies(cookie){
-    return cookie.split(';').map(function(s){
-        return s.split('=')
-    }).reduce(function(obj, arr){
-        obj[arr[0].trimStart().trimEnd()] = arr[1]
-        return obj
-    }, {})
-}
+
 
 
 exports.read = read;

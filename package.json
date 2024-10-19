@@ -1,16 +1,13 @@
 {
   "name": "wx_read_tools",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "node ./script/clean.js && vite build && node ./script/release.js",
+    "build": "vite build",
     "preview": "vite preview --port 5173"
   },
   "dependencies": {
-    "axios": "^1.7.7",
-    "crypto-js": "^4.2.0",
-    "curlconverter": "^4.11.0",
     "shellwords": "^1.0.1",
     "vue": "^3.5.10"
   },
@@ -18,7 +15,6 @@
     "@arco-design/web-vue": "^2.56.2",
     "@arco-plugins/vite-vue": "^1.4.5",
     "@vitejs/plugin-vue": "^5.1.4",
-    "vite": "^5.4.8",
-    "vite-plugin-top-level-await": "^1.4.4"
+    "vite": "^5.4.8"
   }
 }

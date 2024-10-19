@@ -5,8 +5,8 @@
   "features": [
     {
       "code": "wxread",
-      "explain": "微信读书自动刷时长 白读 假装阅读",
-      "cmds":["wxread", "weixinread"]
+      "explain": "微信读书自动补时长",
+      "cmds":["白读", "微信阅读","wxread"]
     }
   ],
   "development": {

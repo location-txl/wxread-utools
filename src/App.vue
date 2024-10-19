@@ -3,19 +3,25 @@
 </template>
 <script setup>
 import HomeComponent from "./components/HomeComponent.vue";
+import {onMounted} from "vue";
+
+function setTheme() {
+  const isDark = window.api.platform.isDarkMode()
+  if (isDark) {
+    document.body.setAttribute('arco-theme', 'dark')
+  } else {
+    document.body.removeAttribute('arco-theme');
+  }
+}
+
+onMounted(() => {
+  setTheme();
+  window.api.platform.registerDarkModeListener(() => {
+    setTheme()
+  })
+})
 </script>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+
 </style>
